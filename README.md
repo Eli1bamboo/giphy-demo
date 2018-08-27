@@ -5,3 +5,5 @@ Uses the Fetch API and Axios
 Run `npm install`.
 
 Run `npm start` to launch the application in the browser.
+
+Run `npm build` to build the application.
