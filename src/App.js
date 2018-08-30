@@ -31,7 +31,8 @@ export default class App extends Component {
       gifs: [],
       loading: true,
       listTitle: null,
-      openSnackbar: false
+      openSnackbar: false,
+      disabled: false
     }
   }
 
@@ -80,18 +81,13 @@ export default class App extends Component {
 
     const gif = _find(gifs, { id: gifId })
 
-    const isFav = _find(favorites, { id: gifId })
-
-    if (gif && !isFav) {
+    if (gif) {
       favorites.push(gif)
 
       this.setState({
-        favorites
-      })
-    } else {
-      this.setState({
+        favorites,
         openSnackbar: true,
-        snackbarMessage: 'This GIF is already in favorites.'
+        snackbarMessage: 'Added to favorites.'
       })
     }
   }
@@ -111,7 +107,8 @@ export default class App extends Component {
       this.setState({
         favorites: newFavorites,
         openSnackbar: true,
-        snackbarMessage: 'Removed from favorites.'
+        snackbarMessage: 'Removed from favorites.',
+        disabled: false
       })
     }
   }
@@ -132,8 +129,6 @@ export default class App extends Component {
       snackbarMessage,
       disabled
     } = this.state
-
-    console.log(disabled)
 
     return (
       <Grid container>
@@ -158,9 +153,13 @@ export default class App extends Component {
                 />
               </Grid>
             ) : (
-              <Typography variant='title' gutterBottom>
-                No favorites selected yet...
-              </Typography>
+              <Grid container spacing={16}>
+                <Grid item xs={12}>
+                  <Typography variant='title' gutterBottom>
+                    No favorites selected yet...
+                  </Typography>
+                </Grid>
+              </Grid>
             )}
           </Paper>
 
@@ -178,6 +177,7 @@ export default class App extends Component {
                 </Grid>
                 <GifList
                   data={gifs}
+                  disabled={disabled}
                   favorites={favorites}
                   onAddToFavorites={this.handleAddToFavorites}
                   onRemoveFromFavorites={this.handleRemoveFromFavorites}
